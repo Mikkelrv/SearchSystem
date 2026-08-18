@@ -26,16 +26,6 @@ namespace ConsoleSearch
 
         }
 
-        private void Execute(string sql)
-        {
-            var cmd = _connection.CreateCommand();
-            cmd.CommandText = sql;
-            cmd.ExecuteNonQuery();
-        }
-
-
-
-
 
         // key is the id of the document, the value is number of search words in the document
         public List<KeyValuePair<int, int>> GetDocuments(List<int> wordIds)

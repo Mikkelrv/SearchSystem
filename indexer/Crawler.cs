@@ -22,8 +22,7 @@ namespace Indexer
 
         public Crawler(IDatabase db){ mdatabase = db; }
 
-        //Return a dictionary containing all words (as the key)in the file
-        // [f] and the value is the number of occurrences of the key in file.
+        //Return a set containing all words in the file [f] 
         private ISet<string> ExtractWordsInFile(FileInfo f)
         {
             ISet<string> res = new HashSet<string>();
@@ -39,6 +38,7 @@ namespace Indexer
             return res;
         }
 
+        // Return the set of if ids for all elements in src
         private ISet<int> GetWordIdFromWords(ISet<string> src) {
             ISet<int> res = new HashSet<int>();
 
@@ -49,10 +49,9 @@ namespace Indexer
             return res;
         }
 
-        // Return a dictionary of all the words (the key) in the files contained
-        // in the directory [dir]. Only files with an extension in
-        // [extensions] is read. The value part of the return value is
-        // the number of occurrences of the key.
+        // Index all files in the directory [dir]. Only files with an extension in
+        // [extensions] is read. all documents, words and occurences are added to the
+        // database
         public void IndexFilesIn(DirectoryInfo dir, List<string> extensions) {
             
             Console.WriteLine($"Crawling {dir.FullName}");

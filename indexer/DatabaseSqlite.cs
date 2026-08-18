@@ -103,20 +103,7 @@ namespace Indexer
                 transaction.Commit();
             }
         }
-
-        public void InsertWord(int id, string value)
-        {
-            var insertCmd = new SqliteCommand("INSERT INTO word(id, name) VALUES(@id,@name)");
-            insertCmd.Connection = _connection;
-
-            var pName = new SqliteParameter("name", value);
-            insertCmd.Parameters.Add(pName);
-
-            var pCount = new SqliteParameter("id", id);
-            insertCmd.Parameters.Add(pCount);
-
-            insertCmd.ExecuteNonQuery();
-        }
+        
 
         public void InsertDocument(BEDocument doc)
         {

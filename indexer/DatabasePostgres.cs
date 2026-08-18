@@ -97,19 +97,7 @@ public class DatabasePostgres : IDatabase
             }
         }
 
-        public void InsertWord(int id, string value)
-        {
-            var insertCmd = new NpgsqlCommand("INSERT INTO word(id, name) VALUES(@id,@name)");
-            insertCmd.Connection = _connection;
-
-            var pName = new NpgsqlParameter("name", value);
-            insertCmd.Parameters.Add(pName);
-
-            var pCount = new NpgsqlParameter("id", id);
-            insertCmd.Parameters.Add(pCount);
-
-            insertCmd.ExecuteNonQuery();
-        }
+    
 
         public void InsertDocument(BEDocument doc)
         {

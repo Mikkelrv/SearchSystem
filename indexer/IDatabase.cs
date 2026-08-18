@@ -12,10 +12,9 @@ namespace Indexer
         int DocumentCounts { get; }
 
         void InsertDocument(BEDocument doc);
-
-        // Insert a word in the database with id = [id] and value = [value]
-        void InsertWord(int id, string value);
-
+        
+        // Insert a word in the database with id = i and value = v foreach entry
+        // (i, v) in [words]
         void InsertAllWords(Dictionary<string, int> words);
 
         void InsertAllOcc(int docId, ISet<int> wordIds);

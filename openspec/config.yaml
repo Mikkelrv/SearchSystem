@@ -1,0 +1,50 @@
+schema: spec-driven
+
+# Project context
+context: |
+  Tech stack: C#, .NET 10, console applications (no ASP.NET/web layer).
+  Solution: SearchSystem.sln with three projects:
+    - indexer: crawls a folder recursively, indexes .txt files into a reverse index.
+    - ConsoleSearch: query-based search over the reverse index.
+    - Shared: class library shared by both (Paths, BE models, etc.).
+  Database: pluggable via IDatabase, with two implementations - SQLite (Microsoft.Data.Sqlite)
+  and PostgreSQL (Npgsql). Both are actively supported; do not assume one replaces the other
+  unless explicitly asked.
+  Conventions:
+    - Follow standard Microsoft C# naming conventions (PascalCase for types/methods/public
+      members, camelCase for locals/parameters, _camelCase for private fields, interfaces
+      prefixed with "I").
+    - Prefer nullable reference types and modern C#/.NET 10 idioms (e.g. file-scoped
+      namespaces, primary constructors, pattern matching) where they improve clarity.
+    - Keep this a small, pragmatic PoC codebase - avoid over-engineering, unnecessary
+      abstractions, or heavy frameworks.
+    - Implement interfaces as a default unless there's a clear reason to provide multiple implementations.
+
+# Per-artifact rules
+rules:
+  proposal:
+    - Keep proposals short and to the point (this is a small PoC codebase, not enterprise software)
+    - State the problem, the proposed approach, and any alternatives considered briefly
+  design:
+    - Only write a design doc when there's a real architectural or cross-cutting decision to make
+    - Call out impacts on both database implementations (SQLite and Postgres) when relevant
+  specs:
+    - Keep specs focused on observable behavior, not implementation detail
+  tasks:
+    - Break work into the smallest slices that can each be implemented and verified on their own
+    - Prefer a handful of clear tasks over an exhaustive checklist
+    - Every task must state how to verify it worked (a build, a test, a command, an observable result)
+
+# Per-operation guidance
+operations:
+  apply:
+    guidance:
+      - Implement one small slice at a time rather than batching multiple tasks together
+      - After each slice, verify it actually works (build succeeds, test passes, command output checked) before moving to the next
+      - Follow standard Microsoft C# naming conventions and existing code style in the touched project
+      - Keep changes consistent across both IDatabase implementations when a change affects data access
+      - Keep test/build summaries concise
+  archive:
+    guidance:
+      - Confirm the solution builds successfully before archiving
+      - Summarize the archive outcome briefly before finishing

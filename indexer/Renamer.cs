@@ -16,7 +16,7 @@ namespace Indexer
 
         void RenameFile(FileInfo f)
         {
-            if  (f.FullName.EndsWith(".txt")) return;
+            if (f.FullName.EndsWith(".txt")) return;
 
             if (f.Name.StartsWith('.')) return;
 
@@ -27,7 +27,7 @@ namespace Indexer
 
         public void Crawl(DirectoryInfo dir)
         {
-        
+
 
             Console.WriteLine("Crawling " + dir.FullName);
 
@@ -39,6 +39,6 @@ namespace Indexer
 
         }
 
-    
+
     }
 }

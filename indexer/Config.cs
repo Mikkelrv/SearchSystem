@@ -1,4 +1,4 @@
-namespace Indexer;
+﻿namespace Indexer;
 
 public class Config
 {

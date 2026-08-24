@@ -1,15 +1,15 @@
-﻿using System;
+using System;
 namespace Shared.Model
 {
     public class BEDocument
     {
         public int mId;
 
-        public String mUrl;
+        public required String mUrl;
 
-        public String mIdxTime;
+        public required String mIdxTime;
 
-        public String mCreationTime;
+        public required String mCreationTime;
 
     }
 }

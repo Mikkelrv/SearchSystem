@@ -1,0 +1,49 @@
+schema: spec-driven
+
+# Project context
+# This is shown to AI when creating artifacts.
+context: |
+  Tech stack: C# / .NET (SearchSystem.sln), projects: Shared, ConsoleSearch, indexer
+  Follow standard .NET/C# coding conventions (Microsoft naming and style guidelines):
+    - PascalCase for types, methods, properties, public members and namespaces
+    - camelCase for locals and parameters; _camelCase for private fields
+    - One public type per file; file name matches the type name
+    - Prefer explicit access modifiers; avoid unnecessary `this.`
+    - Use `var` only when the type is obvious from the right-hand side
+  Follow SOLID principles:
+    - Single Responsibility: each class/module has one reason to change
+    - Open/Closed: extend behavior via abstraction/composition rather than modifying stable code
+    - Liskov Substitution: derived types must be usable anywhere their base type is expected
+    - Interface Segregation: prefer small, focused interfaces over large general-purpose ones
+    - Dependency Inversion: depend on abstractions (interfaces), inject dependencies rather than constructing them inline
+  Also apply:
+    - DRY (Don't Repeat Yourself) - factor out duplicated logic
+    - KISS (Keep It Simple) - avoid unnecessary complexity or cleverness
+    - YAGNI (You Aren't Gonna Need It) - don't build for hypothetical future requirements
+    - Composition over inheritance where reasonable
+    - Fail fast / validate at boundaries; avoid defensive checks for cases that can't happen
+    - Prefer immutability and pure functions where practical
+    - Always implement in the smallest slice possible - ship the minimal working increment, avoid bundling unrelated changes, and split larger work into sequential slices rather than one large change
+
+# Per-artifact rules
+rules:
+  proposal:
+    - Call out any SOLID violations or major design tradeoffs introduced by the change
+  design:
+    - Justify the chosen abstractions against SOLID and note simpler alternatives considered
+  tasks:
+    - Break work into small, single-responsibility tasks that map to focused, reviewable commits
+    - Each task should represent the smallest slice that delivers verifiable value on its own
+
+# Per-operation guidance
+operations:
+  apply:
+    guidance:
+      - Implement the smallest possible slice that satisfies the current task; defer anything not required
+      - Follow existing project naming/style conventions found in the surrounding code
+      - Prefer small, focused classes/methods over large multi-purpose ones
+      - Inject dependencies rather than hard-coding concrete implementations
+      - Avoid duplicating logic that already exists elsewhere in Shared
+  archive:
+    guidance:
+      - Note any deviations from SOLID or coding conventions that were accepted as tradeoffs

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Shared.Model;
 using Shared;
@@ -103,7 +103,7 @@ namespace Indexer
                 transaction.Commit();
             }
         }
-        
+
 
         public void InsertDocument(BEDocument doc)
         {

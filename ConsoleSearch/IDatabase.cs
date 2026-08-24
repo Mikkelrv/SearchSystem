@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Shared.Model;
 
 namespace ConsoleSearch
@@ -14,7 +14,7 @@ namespace ConsoleSearch
         /// <summary>
         /// Get document by its id
         /// </summary>
-        BEDocument GetDocDetails(int docId);
+        BEDocument? GetDocDetails(int docId);
 
         /// <summary>
         /// Perform the essential search for documents. It will return

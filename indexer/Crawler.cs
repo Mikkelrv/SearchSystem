@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Shared.Model;
@@ -20,7 +20,7 @@ namespace Indexer
 
         IDatabase mdatabase;
 
-        public Crawler(IDatabase db){ mdatabase = db; }
+        public Crawler(IDatabase db) { mdatabase = db; }
 
         //Return a set containing all words in the file [f] 
         private ISet<string> ExtractWordsInFile(FileInfo f)
@@ -39,10 +39,11 @@ namespace Indexer
         }
 
         // Return the set of if ids for all elements in src
-        private ISet<int> GetWordIdFromWords(ISet<string> src) {
+        private ISet<int> GetWordIdFromWords(ISet<string> src)
+        {
             ISet<int> res = new HashSet<int>();
 
-            foreach ( var p in src)
+            foreach (var p in src)
             {
                 res.Add(words[p]);
             }
@@ -52,26 +53,30 @@ namespace Indexer
         // Index all files in the directory [dir]. Only files with an extension in
         // [extensions] is read. all documents, words and occurences are added to the
         // database
-        public void IndexFilesIn(DirectoryInfo dir, List<string> extensions) {
-            
+        public void IndexFilesIn(DirectoryInfo dir, List<string> extensions)
+        {
+
             Console.WriteLine($"Crawling {dir.FullName}");
 
             foreach (var file in dir.EnumerateFiles())
                 if (extensions.Contains(file.Extension))
                 {
                     documentCounter++;
-                    BEDocument newDoc = new BEDocument{
+                    BEDocument newDoc = new BEDocument
+                    {
                         mId = documentCounter,
                         mUrl = file.FullName,
                         mIdxTime = DateTime.Now.ToString(),
                         mCreationTime = file.CreationTime.ToString()
                     };
-                    
+
                     mdatabase.InsertDocument(newDoc);
                     Dictionary<string, int> newWords = new Dictionary<string, int>();
                     ISet<string> wordsInFile = ExtractWordsInFile(file);
-                    foreach (var aWord in wordsInFile) {
-                        if (!words.ContainsKey(aWord)) {
+                    foreach (var aWord in wordsInFile)
+                    {
+                        if (!words.ContainsKey(aWord))
+                        {
                             words.Add(aWord, words.Count + 1);
                             newWords.Add(aWord, words[aWord]);
                         }
@@ -86,6 +91,6 @@ namespace Indexer
                 IndexFilesIn(d, extensions);
         }
 
-        
+
     }
 }

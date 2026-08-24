@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Shared;
 using Shared.Model;
@@ -10,7 +10,7 @@ namespace ConsoleSearch
     {
         private SqliteConnection _connection;
 
-        private Dictionary<string, int> mWords = null;
+        private Dictionary<string, int>? mWords = null;
 
         public DatabaseSqlite()
         {
@@ -67,7 +67,7 @@ namespace ConsoleSearch
 
 
 
-       
+
 
         private Dictionary<string, int> GetAllWords()
         {
@@ -88,8 +88,8 @@ namespace ConsoleSearch
             }
             return res;
         }
-        
-        public BEDocument GetDocDetails(int docId)
+
+        public BEDocument? GetDocDetails(int docId)
         {
             var selectCmd = _connection.CreateCommand();
             selectCmd.CommandText = $"SELECT * FROM document where id = {docId}";

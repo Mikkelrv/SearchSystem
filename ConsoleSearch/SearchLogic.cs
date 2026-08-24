@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Shared.Model;
 
@@ -26,9 +26,9 @@ namespace ConsoleSearch
             var wordIds = mDatabase.GetWordIds(query, out ignored);
 
             if (wordIds.Count == 0) // no words know in index
-                 return new SearchResult(query, 0, new List<DocumentHit>(), ignored, DateTime.Now - start);
+                return new SearchResult(query, 0, new List<DocumentHit>(), ignored, DateTime.Now - start);
             // perform the search - get all docIds
-            var docIds =  mDatabase.GetDocuments(wordIds);
+            var docIds = mDatabase.GetDocuments(wordIds);
 
             // get ids for the first maxAmount             
             var top = new List<int>();
@@ -41,7 +41,9 @@ namespace ConsoleSearch
             int idx = 0;
             foreach (var docId in top)
             {
-                BEDocument doc = mDatabase.GetDocDetails(docId);
+                // docId always comes from GetDocuments(), which only returns ids of documents
+                // that exist, so GetDocDetails is guaranteed to find a match here.
+                BEDocument doc = mDatabase.GetDocDetails(docId)!;
                 var missing = mDatabase.WordsFromIds(mDatabase.getMissing(doc.mId, wordIds));
                 missing.AddRange(ignored);
                 docresult.Add(new DocumentHit(doc, docIds[idx++].Value, missing));

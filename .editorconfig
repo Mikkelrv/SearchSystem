@@ -1,0 +1,54 @@
+root = true
+
+[*]
+indent_style = space
+end_of_line = crlf
+charset = utf-8-bom
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.cs]
+indent_size = 4
+
+# Naming conventions (Microsoft standard C# conventions)
+# https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/naming-rules
+
+# Types and public/protected/internal members: PascalCase
+dotnet_naming_rule.types_and_public_members_pascal_case.severity = suggestion
+dotnet_naming_rule.types_and_public_members_pascal_case.symbols = types_and_public_members
+dotnet_naming_rule.types_and_public_members_pascal_case.style = pascal_case
+
+dotnet_naming_symbols.types_and_public_members.applicable_kinds = class, struct, enum, interface, delegate, method, property, event
+dotnet_naming_symbols.types_and_public_members.applicable_accessibilities = public, internal, protected, protected_internal, private_protected
+
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+
+# Interfaces: PascalCase prefixed with "I"
+dotnet_naming_rule.interfaces_i_prefix.severity = suggestion
+dotnet_naming_rule.interfaces_i_prefix.symbols = interfaces
+dotnet_naming_rule.interfaces_i_prefix.style = i_prefix_pascal_case
+
+dotnet_naming_symbols.interfaces.applicable_kinds = interface
+
+dotnet_naming_style.i_prefix_pascal_case.capitalization = pascal_case
+dotnet_naming_style.i_prefix_pascal_case.required_prefix = I
+
+# Private fields: _camelCase
+dotnet_naming_rule.private_fields_underscore_camel_case.severity = suggestion
+dotnet_naming_rule.private_fields_underscore_camel_case.symbols = private_fields
+dotnet_naming_rule.private_fields_underscore_camel_case.style = underscore_camel_case
+
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+
+dotnet_naming_style.underscore_camel_case.capitalization = camel_case
+dotnet_naming_style.underscore_camel_case.required_prefix = _
+
+# Parameters and local variables: camelCase
+dotnet_naming_rule.locals_and_parameters_camel_case.severity = suggestion
+dotnet_naming_rule.locals_and_parameters_camel_case.symbols = locals_and_parameters
+dotnet_naming_rule.locals_and_parameters_camel_case.style = camel_case
+
+dotnet_naming_symbols.locals_and_parameters.applicable_kinds = parameter, local
+
+dotnet_naming_style.camel_case.capitalization = camel_case

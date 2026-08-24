@@ -103,7 +103,7 @@ namespace Indexer
                 transaction.Commit();
             }
         }
-        
+
 
         public void InsertDocument(BEDocument doc)
         {

@@ -16,7 +16,7 @@ namespace Indexer
 
             DateTime start = DateTime.Now;
 
-            crawler.IndexFilesIn(root, new List<string> { ".txt"});        
+            crawler.IndexFilesIn(root, new List<string> { ".txt" });
 
             TimeSpan used = DateTime.Now - start;
             Console.WriteLine("DONE! used " + used.TotalMilliseconds);
@@ -27,7 +27,8 @@ namespace Indexer
             Console.WriteLine($"Number of different words: {all.Count}");
             int count = 10;
             Console.WriteLine($"The first {count} is:");
-            foreach (var p in all) {
+            foreach (var p in all)
+            {
                 Console.WriteLine("<" + p.Key + ", " + p.Value + ">");
                 count--;
                 if (count == 0) break;

@@ -13,10 +13,10 @@ namespace ConsoleSearch
             Missing = missing;
         }
 
-        public BEDocument Document { get;  }
+        public BEDocument Document { get; }
 
-        public int NoOfHits { get;  }
+        public int NoOfHits { get; }
 
-        public List<string> Missing { get;  }
+        public List<string> Missing { get; }
     }
 }

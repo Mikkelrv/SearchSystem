@@ -67,7 +67,7 @@ namespace ConsoleSearch
 
 
 
-       
+
 
         private Dictionary<string, int> GetAllWords()
         {
@@ -88,7 +88,7 @@ namespace ConsoleSearch
             }
             return res;
         }
-        
+
         public BEDocument GetDocDetails(int docId)
         {
             var selectCmd = _connection.CreateCommand();

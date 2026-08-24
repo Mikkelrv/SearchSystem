@@ -23,14 +23,14 @@ namespace ConsoleSearch
             TimeUsed = timeUsed;
         }
 
-        public String[] Query { get;  }
+        public String[] Query { get; }
 
         public int Hits { get; }
 
-        public List<DocumentHit> DocumentHits { get;  }
+        public List<DocumentHit> DocumentHits { get; }
 
         public List<string> Ignored { get; }
 
-        public TimeSpan TimeUsed { get;  }
+        public TimeSpan TimeUsed { get; }
     }
 }

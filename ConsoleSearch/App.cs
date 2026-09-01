@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace ConsoleSearch
 {
@@ -17,10 +18,11 @@ namespace ConsoleSearch
                 string? input = Console.ReadLine();
                 if (input == null || input.Equals("q")) break;
 
-                var query = input.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                var tokens = input.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                bool caseSensitive = tokens.Contains("--case");
+                var query = tokens.Where(t => t != "--case").ToArray();
 
-
-                var result = mSearchLogic.Search(query, 10);
+                var result = mSearchLogic.Search(query, caseSensitive);
 
                 if (result.Ignored.Count > 0)
                 {

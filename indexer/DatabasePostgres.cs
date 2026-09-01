@@ -23,12 +23,13 @@ public class DatabasePostgres : IDatabase
         Execute("CREATE TABLE document(id INTEGER PRIMARY KEY, url TEXT, idxTime TEXT, creationTime TEXT)");
 
         Execute("DROP TABLE IF EXISTS word");
-        Execute("CREATE TABLE word(id INTEGER PRIMARY KEY, name TEXT)");
+        Execute("CREATE TABLE word(id INTEGER PRIMARY KEY, name TEXT UNIQUE)");
 
         Execute("CREATE TABLE Occ(wordId INTEGER, docId INTEGER, "
                 + "FOREIGN KEY (wordId) REFERENCES word(id), "
                 + "FOREIGN KEY (docId) REFERENCES document(id))");
         Execute("CREATE INDEX word_index ON Occ (wordId)");
+        Execute("CREATE INDEX occ_doc ON Occ (docId, wordId)");
     }
 
     private void Execute(string sql)

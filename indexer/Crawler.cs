@@ -1,16 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Shared;
 using Shared.Model;
 
 namespace Indexer
 {
     public class Crawler
     {
-        private readonly char[] separators = " \\\n\t\"$'!,?;.:-_**+=)([]{}<>/@&%€#".ToCharArray();
-        /* Will be used to spilt text into words. So a word is a maximal sequence of
-         * chars that does not contain any char from separators */
-
         private Dictionary<string, int> words = new Dictionary<string, int>();
         /* Will contain all words from files during indexing - thet key is the 
          * value of the word and the value is its id in the database */
@@ -22,17 +19,13 @@ namespace Indexer
 
         public Crawler(IDatabase db) { mdatabase = db; }
 
-        //Return a set containing all words in the file [f] 
+        //Return a set containing all words in the file [f], NFKC-normalized and case folded
         private ISet<string> ExtractWordsInFile(FileInfo f)
         {
             ISet<string> res = new HashSet<string>();
-            var content = File.ReadAllLines(f.FullName);
-            foreach (var line in content)
+            foreach (var aWord in Tokenizer.Tokenize(File.ReadAllText(f.FullName)))
             {
-                foreach (var aWord in line.Split(separators, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    res.Add(aWord);
-                }
+                res.Add(TextNormalizer.Fold(aWord));
             }
 
             return res;

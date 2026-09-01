@@ -10,8 +10,6 @@ namespace ConsoleSearch
     {
         private SqliteConnection _connection;
 
-        private Dictionary<string, int>? mWords = null;
-
         public DatabaseSqlite()
         {
             var connectionStringBuilder = new SqliteConnectionStringBuilder();
@@ -63,117 +61,99 @@ namespace ConsoleSearch
             return res;
         }
 
-        private string AsString(List<int> x) => $"({string.Join(',', x)})";
+        private string AsString(IEnumerable<int> x) => $"({string.Join(',', x)})";
 
 
 
 
 
-        private Dictionary<string, int> GetAllWords()
+        public IReadOnlyDictionary<int, BEDocument> GetDocDetails(IReadOnlyList<int> docIds)
         {
-            Dictionary<string, int> res = new Dictionary<string, int>();
+            var res = new Dictionary<int, BEDocument>();
+            if (docIds.Count == 0)
+                return res;
 
             var selectCmd = _connection.CreateCommand();
-            selectCmd.CommandText = "SELECT * FROM word";
+            selectCmd.CommandText =
+                $"SELECT id, url, idxTime, creationTime FROM document WHERE id IN {AsString(docIds)}";
 
-            using (var reader = selectCmd.ExecuteReader())
+            using var reader = selectCmd.ExecuteReader();
+            while (reader.Read())
             {
-                while (reader.Read())
+                var id = reader.GetInt32(0);
+                res[id] = new BEDocument
                 {
-                    var id = reader.GetInt32(0);
-                    var w = reader.GetString(1);
-
-                    res.Add(w, id);
-                }
+                    mId = id,
+                    mUrl = reader.GetString(1),
+                    mIdxTime = reader.GetString(2),
+                    mCreationTime = reader.GetString(3),
+                };
             }
             return res;
         }
 
-        public BEDocument? GetDocDetails(int docId)
+        public IReadOnlyDictionary<int, List<string>> GetMissingWords(
+            IReadOnlyList<int> docIds, IReadOnlyList<int> wordIds)
         {
-            var selectCmd = _connection.CreateCommand();
-            selectCmd.CommandText = $"SELECT * FROM document where id = {docId}";
+            var res = new Dictionary<int, List<string>>();
+            if (docIds.Count == 0)
+                return res;
 
-            using (var reader = selectCmd.ExecuteReader())
-            {
-                if (reader.Read())
-                {
-                    var id = reader.GetInt32(0);
-                    var url = reader.GetString(1);
-                    var idxTime = reader.GetString(2);
-                    var creationTime = reader.GetString(3);
+            // query word id -> name
+            var names = new Dictionary<int, string>();
+            var nameCmd = _connection.CreateCommand();
+            nameCmd.CommandText = $"SELECT id, name FROM word WHERE id IN {AsString(wordIds)}";
+            using (var reader = nameCmd.ExecuteReader())
+                while (reader.Read())
+                    names[reader.GetInt32(0)] = reader.GetString(1);
 
-                    return new BEDocument { mId = id, mUrl = url, mIdxTime = idxTime, mCreationTime = creationTime };
-                }
-            }
-            return null;
-        }
-
-        /* Return a list of id's for words; all them among wordIds, but not present in the document
-         */
-        public List<int> getMissing(int docId, List<int> wordIds)
-        {
-            var sql = "SELECT wordId FROM Occ where ";
-            sql += "wordId in " + AsString(wordIds) + " AND docId = " + docId;
-            sql += " ORDER BY wordId;";
-
-            var selectCmd = _connection.CreateCommand();
-            selectCmd.CommandText = sql;
-
-            List<int> present = new List<int>();
-
-            using (var reader = selectCmd.ExecuteReader())
-            {
+            // which query words each document actually has
+            var present = new Dictionary<int, HashSet<int>>();
+            var occCmd = _connection.CreateCommand();
+            occCmd.CommandText =
+                $"SELECT docId, wordId FROM Occ WHERE docId IN {AsString(docIds)} AND wordId IN {AsString(wordIds)}";
+            using (var reader = occCmd.ExecuteReader())
                 while (reader.Read())
                 {
-                    var wordId = reader.GetInt32(0);
-                    present.Add(wordId);
+                    var docId = reader.GetInt32(0);
+                    if (!present.TryGetValue(docId, out var has))
+                        present[docId] = has = new HashSet<int>();
+                    has.Add(reader.GetInt32(1));
                 }
-            }
-            var result = new List<int>(wordIds);
-            foreach (var w in present)
-                result.Remove(w);
 
-
-            return result;
-        }
-
-        public List<string> WordsFromIds(List<int> wordIds)
-        {
-            var sql = "SELECT name FROM Word where ";
-            sql += "id in " + AsString(wordIds);
-
-            var selectCmd = _connection.CreateCommand();
-            selectCmd.CommandText = sql;
-
-            List<string> result = new List<string>();
-
-            using (var reader = selectCmd.ExecuteReader())
+            foreach (var docId in docIds)
             {
-                while (reader.Read())
-                {
-                    var wordId = reader.GetString(0);
-                    result.Add(wordId);
-                }
+                present.TryGetValue(docId, out var has);
+                var missing = new List<string>();
+                foreach (var wordId in wordIds)
+                    if (has == null || !has.Contains(wordId))
+                        missing.Add(names[wordId]);
+                res[docId] = missing;
             }
-            return result;
+            return res;
         }
 
         public List<int> GetWordIds(string[] query, out List<string> outIgnored)
         {
-            if (mWords == null)
-                mWords = GetAllWords();
             var res = new List<int>();
-            var ignored = new List<string>();
+            outIgnored = new List<string>();
+
+            var selectCmd = _connection.CreateCommand();
+            selectCmd.CommandText = "SELECT id FROM word WHERE name = @name";
+            var nameParam = selectCmd.CreateParameter();
+            nameParam.ParameterName = "name";
+            selectCmd.Parameters.Add(nameParam);
 
             foreach (var aWord in query)
             {
-                if (mWords.ContainsKey(aWord))
-                    res.Add(mWords[aWord]);
+                nameParam.Value = TextNormalizer.Fold(aWord);
+                var id = selectCmd.ExecuteScalar();
+
+                if (id != null)
+                    res.Add(Convert.ToInt32(id));
                 else
-                    ignored.Add(aWord);
+                    outIgnored.Add(aWord);
             }
-            outIgnored = ignored;
             return res;
         }
     }

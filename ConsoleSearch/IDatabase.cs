@@ -12,11 +12,6 @@ namespace ConsoleSearch
         List<int> GetWordIds(string[] query, out List<string> outIgnored);
 
         /// <summary>
-        /// Get document by its id
-        /// </summary>
-        BEDocument? GetDocDetails(int docId);
-
-        /// <summary>
         /// Perform the essential search for documents. It will return
         /// a list of KeyValuePairs - the key is the id of the
         /// document, and value is the number of words from the query
@@ -25,15 +20,18 @@ namespace ConsoleSearch
         List<KeyValuePair<int, int>> GetDocuments(List<int> wordIds);
 
         /// <summary>
-        /// Return all ids of words, contained in [wordIds], but not
-        /// present in the document with id [docId]
+        /// Look up the details of many documents in one query, keyed by document id.
+        /// Every id in [docIds] comes from <see cref="GetDocuments"/>, so every id is present
+        /// in the result.
         /// </summary>
-        List<int> getMissing(int docId, List<int> wordIds);
+        IReadOnlyDictionary<int, BEDocument> GetDocDetails(IReadOnlyList<int> docIds);
 
         /// <summary>
-        /// Convert a list of word id's to a list of the value of the
-        /// words
+        /// For each document in [docIds], the names of the query words (given as [wordIds])
+        /// that the document does NOT contain, in [wordIds] order. Intended to be called only
+        /// with documents already known to be missing at least one query word.
         /// </summary>
-        List<string> WordsFromIds(List<int> wordIds);
+        IReadOnlyDictionary<int, List<string>> GetMissingWords(
+            IReadOnlyList<int> docIds, IReadOnlyList<int> wordIds);
     }
 }

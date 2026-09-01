@@ -403,3 +403,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# graphify knowledge graph (generated output)
+graphify-out/
